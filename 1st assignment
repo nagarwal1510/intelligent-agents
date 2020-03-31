@@ -1,0 +1,44 @@
+#importing packages that i ll be using
+import numpy as np   #for array
+import random      
+from random import randint      #for random choice
+import matplotlib.pyplot as plt     #for graph ploting
+
+x= np.zeros(1000)           # declaring array
+x[499] = 1                  # changing one value to 1 
+a=1                         # taking a variable for the condition of while tht is loop should end when all the nos of array are converted to 1
+m=0                         # initialising a variable correspond to iterations
+x_axis= []                  # declaring a variable for grpah plotting
+y_axis= []                  # declaring a variable for grpah plotting
+
+while(a<=1000):             # starting loop so that the program repeat its step until we get desired product 
+  for i in range(0,999):    # starting a loop to find which no. in array has value of 1
+    if x[i]==1:             
+      if(randint(0,1)==0):  # randomly choosing the no.using randint 
+         x[abs(i-1)]=1      # now putting conditions on adjacent no.s 
+      else:     
+         x[abs(i+1)]=1
+
+  z= np.random.randint(0,1000,size=2)  # choosing two random no. for swapping nd then swapping them using 2 other variables j & k
+  j=x[z[0]]      
+  k=x[[1]]
+  x[z[0]]=k
+  x[z[1]]=j
+
+  num1=0                    # declaring a variable to calculate no. of 1s
+  x_axis.append(m)          # linking no. of iterations to x-axis
+  m=m+1                     # increasing the value of m as the no. of iterations increases
+  for b in range(0,1000):   # creating a loop to calculate no. of 1s after every iteration
+    if x[b] ==1:
+      num1= num1 +1
+  y_axis.append(num1)       # linking no. of 1s to y-axis
+  
+
+  a=num1                     # giving a the value of no.s of 1 to check that the loop has to be run again or not
+  if(a==1000):               # creating a condition to automatically end the first loop when no.s of 1 reaches 1000
+    break
+
+plt.plot(x_axis,y_axis)      # linking x-axis & y-axis and also giving names to them
+plt.xlabel('no. of iterations')
+plt.ylabel('no. of enteries')
+plt.show()      
