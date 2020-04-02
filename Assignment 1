@@ -1,0 +1,78 @@
+#importing packages that i ll be using
+import numpy as np   #for array
+import random      
+from random import randint      #for random choice
+import matplotlib.pyplot as plt     #for graph ploting
+from google.colab import files
+import scipy.signal
+
+x= np.zeros(10000)           # declaring array
+x[4999] = 1                  # changing one value to 1 
+a=1                         # taking a variable for the condition of while tht is loop should end when all the nos of array are converted to 1
+m=0                         # initialising a variable correspond to iterations
+x_axis= []                  # declaring a variable for grpah plotting
+y_axis= []                  # declaring a variable for grpah plotting
+
+while(a<=10000):             # starting loop so that the program repeat its step until we get desired product 
+  for w in range(5):
+    z= np.random.randint(0,10000,size=2)  # choosing two random no. for swapping nd then swapping them using 2 other variables j & k
+    j=x[z[0]]      
+    k=x[z[1]]
+    x[z[0]]=k
+    x[z[1]]=j
+
+  for i in range(0,9999):    # starting a loop to find which no. in array has value of 1
+    if x[i]==1:
+      b=random.sample([0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1],k=1)          
+      c=random.sample([0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1],k=1)
+      if(b==[1]):  # randomly choosing the no.using randint 
+         x[abs(i-1)]=1      # now putting conditions on adjacent no.s 
+      if(c==[1]):    
+         x[(i+1) % 10000]=1
+
+
+  num1=0                    # declaring a variable to calculate no. of 1s
+  x_axis.append(m)          # linking no. of iterations to x-axis
+  m=m+1                     # increasing the value of m as the no. of iterations increases
+  for b in range(0,10000):   # creating a loop to calculate no. of 1s after every iteration
+    if x[b] ==1:
+      num1= num1 +1
+  y_axis.append(num1)       # linking no. of 1s to y-axis
+  
+
+  a=num1                     # giving a the value of no.s of 1 to check that the loop has to be run again or not
+  if(a==10000):               # creating a condition to automatically end the first loop when no.s of 1 reaches 1000
+    break
+
+y=np.array(y_axis)  
+dy=np.gradient(y)
+yg1 = scipy.signal.savgol_filter(dy, 201, 6, mode='constant')
+yg2 = scipy.signal.savgol_filter(dy, 201, 6, mode='wrap')
+yg3 = scipy.signal.savgol_filter(dy, 201, 6, mode='nearest')
+yg4 = scipy.signal.savgol_filter(dy, 201, 6, mode='mirror')
+yg5 = scipy.signal.savgol_filter(dy, 201, 6)
+
+
+test = plt.figure()
+plt.plot(x_axis,y_axis)      # linking x-axis & y-axis and also giving names to them
+plt.xlabel('no. of iterations')
+plt.ylabel('no. of ones')
+test.show()      
+test.savefig('SOC-Plot-1-naman.png')
+files.download('SOC-Plot-1-naman.png')
+
+
+test2=plt.figure()
+plt.plot(x_axis, dy, color = 'yellow')
+plt.plot(x_axis, yg1, color = 'run')
+plt.plot(x_axis, yg2, color = 'green')
+plt.plot(x_axis, yg3, color = 'blue')
+plt.plot(x_axis, yg4, color = 'purple')
+plt.plot(x_axis, yg5, color = 'black')
+plt.ylabel("dy/dx")
+plt.xlabel("x")
+test2.show()
+test.savefig('SOC-Plot-3-naman.png')
+files.download('SOC-Plot-3-naman.png')
+#print(len(x_axis))
+print(f"max value: {max(yg1)}")
